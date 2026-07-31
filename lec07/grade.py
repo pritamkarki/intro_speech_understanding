@@ -1,5 +1,11 @@
-import unittest, homework7
+import unittest
 import numpy as np
+import sys
+import os
+
+# Add current directory to path to import homework7
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import homework7
 
 # TestSequence
 class Test(unittest.TestCase):
