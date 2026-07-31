@@ -1,9 +1,14 @@
-import unittest, homework10
+import unittest
 import numpy as np
 import librosa
+import sys, os
 
-speech, Fs = librosa.load('train.m4a', sr=8000)
-testspeech, Fs = librosa.load('test.m4a', sr=8000)
+scriptdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, scriptdir)
+import homework10
+
+speech, Fs = librosa.load(os.path.join(scriptdir, 'train.m4a'), sr=8000)
+testspeech, Fs = librosa.load(os.path.join(scriptdir, 'test.m4a'), sr=8000)
 labels = ['a', 'i', 'u', 'e', 'o']
 
 # TestSequence
