@@ -1,4 +1,10 @@
-import unittest, homework4
+import unittest
+import sys
+import os
+
+# Add current directory to path to import homework4
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import homework4
 
 # TestSequence
 class Test(unittest.TestCase):
