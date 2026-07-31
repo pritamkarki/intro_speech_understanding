@@ -16,7 +16,31 @@ def lpc(speech, frame_length, frame_skip, order):
     excitation (nframes,frame_length) - linear prediction excitation frames
       (only the last frame_skip samples in each frame need to be valid)
     '''
-    raise RuntimeError("You need to write this part!")
+    nframes = int((len(speech) - frame_length) / frame_skip)
+    A = np.zeros((nframes, order + 1))
+    excitation = np.zeros((nframes, frame_length))
+    
+    for k in range(nframes):
+        start = k * frame_skip
+        frame = speech[start:start + frame_length]
+        
+        X = np.zeros((frame_length - order, order))
+        for j in range(order):
+            X[:, j] = frame[order - 1 - j:frame_length - 1 - j]
+        
+        target = frame[order:]
+        a, _, _, _ = np.linalg.lstsq(X, target, rcond=None)
+        
+        A[k, 0] = 1
+        A[k, 1:] = a
+        
+        e = np.copy(frame)
+        for n in range(order, frame_length):
+            for j in range(1, order + 1):
+                e[n] += a[j - 1] * frame[n - j]
+        excitation[k, :] = e
+    
+    return A, excitation
 
 def synthesize(e, A, frame_skip):
     '''
@@ -30,7 +54,21 @@ def synthesize(e, A, frame_skip):
     @returns:
     synthesis (duration) - synthetic speech waveform
     '''
-    raise RuntimeError("You need to write this part!")
+    nframes = A.shape[0]
+    order = A.shape[1] - 1
+    frame_length = len(e) // nframes
+    synthesis = np.zeros(len(e))
+    
+    for k in range(nframes):
+        start = k * frame_skip
+        for n in range(frame_length):
+            idx = start + n
+            y_n = e[idx]
+            for j in range(1, min(n + 1, order + 1)):
+                y_n -= A[k, j] * synthesis[idx - j]
+            synthesis[idx] = y_n
+    
+    return synthesis
 
 def robot_voice(excitation, T0, frame_skip):
     '''
@@ -45,5 +83,19 @@ def robot_voice(excitation, T0, frame_skip):
     gain (nframes) - gain for each frame
     e_robot (nframes*frame_skip) - excitation for the robot voice
     '''
-    raise RuntimeError("You need to write this part!")
-
+    nframes = excitation.shape[0]
+    total_length = frame_skip * nframes
+    
+    gain = np.sqrt(np.mean(excitation ** 2, axis=1))
+    
+    e_robot = np.zeros(total_length)
+    t = np.arange(total_length)
+    base = np.zeros(total_length)
+    base[::T0] = -1
+    
+    for k in range(nframes):
+        start = k * frame_skip
+        end = start + frame_skip
+        e_robot[start:end] = base[start:end] * gain[k]
+    
+    return gain, e_robot

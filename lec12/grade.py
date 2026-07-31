@@ -1,5 +1,10 @@
-import unittest, homework12
+import unittest
 import numpy as np
+import os, sys
+
+scriptdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, scriptdir)
+import homework12
 
 def voiced_excitation(duration, F0, Fs):
     '''

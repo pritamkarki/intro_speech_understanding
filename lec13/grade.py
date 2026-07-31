@@ -1,10 +1,15 @@
-import unittest, homework13, librosa
+import unittest
 import numpy as np
+import os, sys
+
+scriptdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, scriptdir)
+import homework13, librosa
 
 # TestSequence
 class Test(unittest.TestCase):
     def test_lpc(self):
-        speech, fs = librosa.load('speech_waveform.wav',sr=8000)
+        speech, fs = librosa.load(os.path.join(scriptdir, 'speech_waveform.wav'),sr=8000)
         frame_length = int(fs*0.025)
         frame_skip = int(fs*0.01)
         order = 10
@@ -18,7 +23,7 @@ class Test(unittest.TestCase):
         self.assertEqual(excitation.shape[1],frame_length,'excitation should have %d cols'%(frame_length))
         
     def test_synthesize(self):
-        speech, fs = librosa.load('speech_waveform.wav',sr=8000)
+        speech, fs = librosa.load(os.path.join(scriptdir, 'speech_waveform.wav'),sr=8000)
         frame_length = int(fs*0.025)
         frame_skip = int(fs*0.01)
         order = 10
@@ -32,7 +37,7 @@ class Test(unittest.TestCase):
                            'synthesis power should be greater than excitation power')
         
     def test_robot_voice(self):
-        speech, fs = librosa.load('speech_waveform.wav',sr=8000)
+        speech, fs = librosa.load(os.path.join(scriptdir, 'speech_waveform.wav'),sr=8000)
         frame_length = int(fs*0.025)
         frame_skip = int(fs*0.01)
         nframes = int((len(speech)-frame_length)/frame_skip)

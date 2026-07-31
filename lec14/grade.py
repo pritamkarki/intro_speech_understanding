@@ -1,6 +1,10 @@
-import unittest, pathlib, homework14, os.path
+import unittest, pathlib, os, sys
 from contextlib import contextmanager,redirect_stderr,redirect_stdout
 from os import devnull
+
+scriptdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, scriptdir)
+import homework14
 
 # TestSequence
 class Test(unittest.TestCase):
