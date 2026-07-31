@@ -1,4 +1,8 @@
-import unittest, homework3
+import unittest
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import homework3
 
 class Test(unittest.TestCase):
     def test_wrods2characters(self):
