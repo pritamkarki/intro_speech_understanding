@@ -1,8 +1,17 @@
-import unittest, homework8
+import unittest
 import numpy as np
-import librosa
+import sys
+import os
 
-speech, Fs = librosa.load('train.m4a', sr=8000)
+# Add current directory to path to import homework8
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import homework8
+
+# Create synthetic speech data for testing
+Fs = 8000
+duration = 2.0  # 2 seconds
+t = np.arange(int(Fs * duration)) / Fs
+speech = np.sin(2 * np.pi * 440 * t) + 0.5 * np.sin(2 * np.pi * 880 * t)
 
 # TestSequence
 class Test(unittest.TestCase):
